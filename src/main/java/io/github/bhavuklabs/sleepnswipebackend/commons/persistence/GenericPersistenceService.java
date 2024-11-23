@@ -7,14 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-public class GenericPersistenceService<Entity, ID> {
+public class GenericPersistenceService<Entity, DTO, ID> {
 
     private final JpaRepository<Entity, ID> repository;
-    private final GenericMapper<Entity, ?> mapper;
+    private final GenericMapper<Entity, DTO> mapper;
 
     public GenericPersistenceService(
             JpaRepository<Entity, ID> repository,
-            GenericMapper<Entity, ?> mapper
+            GenericMapper<Entity, DTO> mapper
     ) {
         this.repository = repository;
         this.mapper = mapper;

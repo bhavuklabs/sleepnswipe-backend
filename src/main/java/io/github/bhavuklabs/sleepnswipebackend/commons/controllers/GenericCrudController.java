@@ -4,16 +4,12 @@ import io.github.bhavuklabs.sleepnswipebackend.commons.mappers.GenericMapper;
 import io.github.bhavuklabs.sleepnswipebackend.commons.persistence.GenericPersistenceService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,10 +23,10 @@ public abstract class GenericCrudController<Entity, DTO, ID> {
     private static final Logger logger = LoggerFactory.getLogger(GenericCrudController.class);
 
 
-    private final GenericPersistenceService<Entity, ID> service;
+    private final GenericPersistenceService<Entity, DTO,ID> service;
     private final GenericMapper<Entity, DTO> mapper;
 
-    public GenericCrudController(GenericPersistenceService<Entity, ID> service, GenericMapper<Entity, DTO> mapper) {
+    public GenericCrudController(GenericPersistenceService<Entity, DTO, ID> service, GenericMapper<Entity, DTO> mapper) {
         this.service = service;
         this.mapper = mapper;
     }
@@ -68,7 +64,7 @@ public abstract class GenericCrudController<Entity, DTO, ID> {
     public ResponseEntity<DTO> create(@RequestBody DTO dto, Authentication authentication) {
         logger.debug("Creating entity: {}", dto);
         try {
-            Entity entity = this.mapper.toEntity(dto);
+            Entity entity = this.mapper.fromDto(dto);
             var savedEntity = this.service.save(entity);
             DTO savedDto = this.mapper.toDto(savedEntity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedDto);
@@ -82,7 +78,7 @@ public abstract class GenericCrudController<Entity, DTO, ID> {
     public ResponseEntity<DTO> update(@PathVariable ID id, @RequestBody DTO dto, Authentication authentication) {
         logger.debug("Updating entity: {}", dto);
         try {
-            Entity entity = this.mapper.toEntity(dto);
+            Entity entity = this.mapper.fromDto(dto);
             Optional<Entity> updatedEntity = this.service.update(id, entity);
             return updatedEntity.map(this.mapper::toDto)
                     .map(ResponseEntity::ok)
