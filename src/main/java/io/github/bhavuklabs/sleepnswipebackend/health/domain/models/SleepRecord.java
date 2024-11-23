@@ -38,7 +38,7 @@ public class SleepRecord {
     @Column(name="rem_sleep_minutes")
     private int remSleepMinutes;
 
-    @Column(name="sleep_efficiency_percentage", precision = 5, scale=2)
+    @Column(name="sleep_efficiency_percentage", precision = 5)
     private double sleepEfficiencyPercentage;
 
     @Column(name="sleep_quality_score")
@@ -50,7 +50,7 @@ public class SleepRecord {
     @Column(name="wake_time")
     private LocalDateTime wakeTime;
 
-    @Column(name="heart_rate_during_sleep", precision=5, scale=2)
+    @Column(name="heart_rate_during_sleep", precision=5)
     private double heartRateDuringSleep;
 
     @Enumerated(EnumType.STRING)

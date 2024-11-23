@@ -33,7 +33,7 @@ public class HealthProfile {
     @Column(name="medical_conditions")
     private String medicalConditions;
 
-    @Column(name="bmi", precision = 5, scale=2)
+    @Column(name="bmi", precision = 5)
     private double bmi;
 
     @Column(name="created_at")

@@ -18,17 +18,17 @@ public class SentimentProfile {
     @JoinColumn(name="user_id")
     private User user;
 
-    @Column(name="overall_sentiment_score", precision=5, scale=2)
+    @Column(name="overall_sentiment_score", precision=5)
     private double overallSentimentScore;
 
     @Column(name="personality_type", length=50)
     private String personalityType;
 
-    @Column(name="emotional_stability_score", precision=5, scale=2)
+    @Column(name="emotional_stability_score", precision=5)
     private double emotionalStabilityScore;
 
 
-    @Column(name="social_interaction_score", precision=5, scale=2)
+    @Column(name="social_interaction_score", precision=5)
     private double socialInteractionScore;
 
     @Column(name="last_analysis_date")
