@@ -85,6 +85,17 @@ public class UserServiceImplementation extends UserService {
     }
 
     @Override
+    public AuthResponseDomain authenticationSignup(AuthRequestDomain requestDomain) {
+        User user = new User();
+        user.setEmail(requestDomain.email());
+        user.setPassword(passwordEncoder.encode(requestDomain.password()));
+        User savedUser = this.userRepository.save(user);
+        String jwt = this.jwtProvider.generateToken(new UsernamePasswordAuthenticationToken(savedUser.getEmail(), null, new ArrayList<>()), savedUser.getId());
+        return new AuthResponseDomain(jwt, "USer Registered");
+
+    }
+
+    @Override
     public AuthResponseDomain signup(UserDomain userDomain) {
         User createdUser = this.registerUser(userDomain);
 

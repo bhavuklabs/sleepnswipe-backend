@@ -28,6 +28,16 @@ public class UserControllerImplementation extends UserController {
         this.userMapper = mapper;
     }
 
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthResponseDomain> authenticate(@RequestBody AuthRequestDomain request) {
+        AuthResponseDomain responseDomain = this.userService.authenticationSignup(request);
+        if(responseDomain == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(responseDomain);
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<AuthResponseDomain> signup(@RequestBody UserDomain user) {
         AuthResponseDomain responseDomain = this.userService.signup(user);
