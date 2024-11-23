@@ -22,13 +22,13 @@ public class UserMatch {
     @JoinColumn(name="user_id_2")
     private User user2;
 
-    @Column(name="compatibility_score", precision=5, scale=2)
+    @Column(name="compatibility_score", precision=5)
     private double compatibilityScore;
 
-    @Column(name="sentiment_match_score", precision=5, scale=2)
+    @Column(name="sentiment_match_score", precision=5)
     private double sentimentMatchScore;
 
-    @Column(name="health_match_score", precision=5, scale=2)
+    @Column(name="health_match_score", precision=5)
     private double healthMatchScore;
 
     @Column(name="matched_timestamp")

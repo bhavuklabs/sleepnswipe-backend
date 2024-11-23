@@ -33,10 +33,10 @@ public class MatchPreference {
     @Column(name="max_distance_km")
     private int maxDistanceKm;
 
-    @Column(name="sleep_compatibility_weight", precision=5, scale=2)
+    @Column(name="sleep_compatibility_weight", precision=5)
     private double sleepCompatibilityWeight;
 
-    @Column(name="sentiment_compatibility_weight", precision=5, scale=2)
+    @Column(name="sentiment_compatibility_weight", precision=5)
     private double sentimentCompatibilityWeight;
 
     @Column(name="created_at")
