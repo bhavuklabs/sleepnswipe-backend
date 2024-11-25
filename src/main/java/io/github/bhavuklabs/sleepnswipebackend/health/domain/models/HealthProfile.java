@@ -36,6 +36,14 @@ public class HealthProfile {
     @Column(name="bmi", precision = 5)
     private double bmi;
 
+    @OneToOne
+    @JoinColumn(name="user_health_id")
+    private UserHealthInsight userHealthInsight;
+
+    @OneToOne
+    @JoinColumn(name="sentiment_profile_id")
+    private SentimentProfile sentimentProfile;
+
     @Column(name="created_at")
     private LocalDateTime createdAt;
 

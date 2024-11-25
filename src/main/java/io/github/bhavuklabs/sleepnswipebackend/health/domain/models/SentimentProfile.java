@@ -31,7 +31,13 @@ public class SentimentProfile {
     @Column(name="social_interaction_score", precision=5)
     private double socialInteractionScore;
 
+    @OneToOne
+    @JoinColumn(name="sentiment_id")
+    private SentimentAnalysis sentimentAnalysis;
+
     @Column(name="last_analysis_date")
     private LocalDateTime lastAnalysisDate;
+
+
 
 }
