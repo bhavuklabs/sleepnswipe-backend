@@ -1,10 +1,14 @@
 package io.github.bhavuklabs.sleepnswipebackend.security.domain.models;
 
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeHistory;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeQuota;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.UserMatch;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Table(name="user_profiles")
@@ -123,6 +127,29 @@ public class UserProfile {
 
     @Column(name = "bmi", precision = 5, scale = 2)
     private BigDecimal bmi;
+
+    @Column(name="age")
+    private int age;
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @OneToOne(mappedBy = "userProfile")
+    private User user;
+
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

@@ -1,9 +1,14 @@
 package io.github.bhavuklabs.sleepnswipebackend.security.domain.models;
 
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.MatchPreference;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeHistory;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeQuota;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.UserMatch;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name="users")
@@ -120,6 +125,92 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
+
+    private double latitude;
+    private double longitude;
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    @OneToOne
+    @JoinColumn(name="user_profile")
+    private UserProfile userProfile;
+
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
+    }
+
+    public SwipeQuota getSwipeQuota() {
+        return swipeQuota;
+    }
+
+    public void setSwipeQuota(SwipeQuota swipeQuota) {
+        this.swipeQuota = swipeQuota;
+    }
+
+    public List<SwipeHistory> getSwipeHistories() {
+        return swipeHistories;
+    }
+
+    public void setSwipeHistories(List<SwipeHistory> swipeHistories) {
+        this.swipeHistories = swipeHistories;
+    }
+
+    public List<MatchPreference> getMatchPreferences() {
+        return matchPreferences;
+    }
+
+    public void setMatchPreferences(List<MatchPreference> matchPreferences) {
+        this.matchPreferences = matchPreferences;
+    }
+
+    public List<UserMatch> getMatchesAsUser1() {
+        return matchesAsUser1;
+    }
+
+    public void setMatchesAsUser1(List<UserMatch> matchesAsUser1) {
+        this.matchesAsUser1 = matchesAsUser1;
+    }
+
+    public List<UserMatch> getMatchesAsUser2() {
+        return matchesAsUser2;
+    }
+
+    public void setMatchesAsUser2(List<UserMatch> matchesAsUser2) {
+        this.matchesAsUser2 = matchesAsUser2;
+    }
+
+    @OneToOne(mappedBy = "user")
+    private SwipeQuota swipeQuota;
+
+    @OneToMany(mappedBy = "user")
+    private List<SwipeHistory> swipeHistories;
+
+    @OneToMany(mappedBy = "user")
+    private List<MatchPreference> matchPreferences;
+
+    @OneToMany(mappedBy = "user1")
+    private List<UserMatch> matchesAsUser1;
+
+    @OneToMany(mappedBy = "user2")
+    private List<UserMatch> matchesAsUser2;
 
     private LocalDateTime createdAt;
     private LocalDateTime lastLogin;
