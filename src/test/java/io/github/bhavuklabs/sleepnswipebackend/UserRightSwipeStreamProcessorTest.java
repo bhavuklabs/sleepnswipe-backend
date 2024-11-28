@@ -2,6 +2,7 @@ package io.github.bhavuklabs.sleepnswipebackend;
 
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.UserRightSwipeStreamProcessor;
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.entities.SwipeRequestDomain;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeHistory;
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.services.implementation.KafkaMatchProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,32 +28,23 @@ public class UserRightSwipeStreamProcessorTest {
 
     @Test
     void testProcessUserRightSwipes_ValidSwipeRequest() {
-        // Arrange
         UUID userId = UUID.randomUUID();
         SwipeRequestDomain swipeRequest = new SwipeRequestDomain(
                 userId,
                 UUID.randomUUID(),
-                null // Assuming SwipeType is nullable or not required for this test
+                SwipeHistory.SwipeType.RIGHT
         );
-
-        // Act
         streamProcessor.processUserRightSwipes(swipeRequest);
-
-        // Assert
         verify(kafkaMatchProcessor).processMatchCandidates(userId);
     }
 
     @Test
     void testProcessUserRightSwipes_NullUserId() {
-        // Arrange
         SwipeRequestDomain swipeRequest = new SwipeRequestDomain(
                 null,
                 UUID.randomUUID(),
-                null
+                SwipeHistory.SwipeType.RIGHT
         );
-
-        // Act & Assert
-        // Expect this to not throw an exception, but also not call processMatchCandidates
         streamProcessor.processUserRightSwipes(swipeRequest);
     }
 
@@ -71,12 +63,9 @@ public class UserRightSwipeStreamProcessorTest {
                 UUID.randomUUID(),
                 null
         );
-
-        // Act
         streamProcessor.processUserRightSwipes(swipeRequest1);
         streamProcessor.processUserRightSwipes(swipeRequest2);
 
-        // Assert
         verify(kafkaMatchProcessor).processMatchCandidates(userId1);
         verify(kafkaMatchProcessor).processMatchCandidates(userId2);
     }
