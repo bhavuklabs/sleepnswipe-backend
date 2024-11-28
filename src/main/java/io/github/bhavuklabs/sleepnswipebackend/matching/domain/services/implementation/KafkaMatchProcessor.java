@@ -34,7 +34,6 @@ public class KafkaMatchProcessor {
         var sourceUser = this.userRepository.findById(uuid).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         List<SwipeHistory> rightSwipesOnUser = this.swipeHistoryRepository.findByTargetProfileAndSwipeType(sourceUser,SwipeHistory.SwipeType.RIGHT);
-
         for(SwipeHistory swipeHistory : rightSwipesOnUser) {
             User potentialMatchUser = swipeHistory.getUser();
             boolean mutualSwipe = swipeHistoryRepository.existsByUserAndTargetProfileAndSwipeType(potentialMatchUser, sourceUser, SwipeHistory.SwipeType.RIGHT);
