@@ -5,11 +5,8 @@ import io.github.bhavuklabs.sleepnswipebackend.commons.ai.domain.AIResponseDomai
 import io.github.bhavuklabs.sleepnswipebackend.commons.ai.domain.EmbeddingRequestDomain;
 import io.github.bhavuklabs.sleepnswipebackend.commons.ai.domain.EmbeddingResponseDomain;
 
-public interface GenericAIService<Type> {
+import java.net.URISyntaxException;
 
-    AIResponseDomain generateResponse(AIRequestDomain<Type> aiRequest);
-    EmbeddingResponseDomain generateEmbeddings(EmbeddingRequestDomain<Type> embeddingRequest);
-    String updateContext(String currentContext, String newInput);
-    String getCurrentModel();
-    void setModel(String modelName);
+public interface GenericAIService<ResponsePojo> {
+    ResponsePojo generateResponse(AIRequestDomain aiRequest) throws URISyntaxException;
 }

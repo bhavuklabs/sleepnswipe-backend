@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                     requests.requestMatchers("/signup").permitAll();
                     requests.requestMatchers("/auth/**").permitAll();
                     requests.requestMatchers("/login").permitAll();
+                    requests.requestMatchers("/onboarding/questions/**").permitAll();
                     requests.requestMatchers("/api/v1/**").authenticated();
                 })
                 .addFilterBefore(new JwtValidator(), UsernamePasswordAuthenticationFilter.class)
