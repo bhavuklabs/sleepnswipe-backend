@@ -44,5 +44,4 @@ public class QuestionnaireController {
         var entity = this.questionnaireService.createQuestionnaires(requestDomain);
         return ResponseEntity.of(Optional.ofNullable(entity));
     }
-
 }

@@ -31,7 +31,8 @@ public class SecurityConfiguration {
                     requests.requestMatchers("/auth/**").permitAll();
                     requests.requestMatchers("/login").permitAll();
                     requests.requestMatchers("/onboarding/questions/**").permitAll();
-                    requests.requestMatchers("/api/v1/**").authenticated();
+                    requests.requestMatchers("/sentiment/**").permitAll();
+                    requests.requestMatchers("/api/v1/**").permitAll();
                 })
                 .addFilterBefore(new JwtValidator(), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())

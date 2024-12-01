@@ -22,7 +22,6 @@ public class QuestionnaireResponseReceiver {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-
     public static class Question {
         @JsonProperty(namespace = "question")
         private String question;
