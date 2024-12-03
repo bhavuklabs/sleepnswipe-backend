@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record UserDomain(
-        UUID id,
         String email,
+        String password,
         String username,
         String firstName,
         String lastName,

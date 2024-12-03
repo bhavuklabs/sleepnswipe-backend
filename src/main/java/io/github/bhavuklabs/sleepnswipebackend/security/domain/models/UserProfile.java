@@ -14,9 +14,8 @@ import java.util.List;
 @Table(name="user_profiles")
 @Entity
 public class UserProfile {
-    public UserProfile(String profileId, String userId, BigDecimal heightCm, BigDecimal weightKg, BloodType bloodType, String medicalConditions, String allergies, BigDecimal bmi, LocalDateTime createdAt) {
+    public UserProfile(String profileId, BigDecimal heightCm, BigDecimal weightKg, BloodType bloodType, String medicalConditions, String allergies, BigDecimal bmi, LocalDateTime createdAt) {
         this.profileId = profileId;
-        this.userId = userId;
         this.heightCm = heightCm;
         this.weightKg = weightKg;
         this.bloodType = bloodType;
@@ -36,14 +35,6 @@ public class UserProfile {
 
     public void setProfileId(String profileId) {
         this.profileId = profileId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public BigDecimal getHeightCm() {
@@ -105,9 +96,6 @@ public class UserProfile {
     @Id
     @Column(name = "profile_id")
     private String profileId;
-
-    @Column(name = "user_id", nullable = false)
-    private String userId;
 
     @Column(name = "height_cm", precision = 5, scale = 2)
     private BigDecimal heightCm;

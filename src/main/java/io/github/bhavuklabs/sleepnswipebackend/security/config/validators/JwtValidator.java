@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class JwtValidator extends OncePerRequestFilter {
@@ -62,7 +63,7 @@ public class JwtValidator extends OncePerRequestFilter {
                 .getBody();
 
         String email = String.valueOf(claims.get("email"));
-        Long userId = claims.get("userId", Long.class);
+        String userId = claims.get("userId", String.class);
 
         Object authoritiesObject = claims.get("authorities");
         List<GrantedAuthority> authorityList;

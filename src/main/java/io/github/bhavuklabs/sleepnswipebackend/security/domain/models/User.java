@@ -116,6 +116,8 @@ public class User {
     private UUID id;
 
     private String email;
+
+    @Column(nullable = true)
     private String password;
 
     private String username;

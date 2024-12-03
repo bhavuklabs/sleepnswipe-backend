@@ -23,7 +23,7 @@ public class JwtProvider {
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .claim("email", authentication.getName())
-                .claim("userId", userId)
+                .claim("userId", userId.toString())
                 .claim("authorities", authentication.getAuthorities())
                 .signWith(Keys.hmacShaKeyFor(JwtConstants.JWT_SECRET.getBytes()))
                 .compact();

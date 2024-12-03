@@ -30,9 +30,10 @@ public class SecurityConfiguration {
                     requests.requestMatchers("/signup").permitAll();
                     requests.requestMatchers("/auth/**").permitAll();
                     requests.requestMatchers("/login").permitAll();
-                    requests.requestMatchers("/onboarding/questions/**").permitAll();
+                    requests.requestMatchers("/onboarding/send").permitAll();
                     requests.requestMatchers("/sentiment/**").permitAll();
                     requests.requestMatchers("/api/v1/**").permitAll();
+                    requests.requestMatchers("/onboarding/**").permitAll();
                 })
                 .addFilterBefore(new JwtValidator(), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())
