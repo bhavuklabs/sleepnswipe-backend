@@ -109,10 +109,7 @@ public class QuestionServiceImplementation extends QuestionService {
                     .replace("```json", "").replace("```", "");
             Gson gson = new Gson();
             SentimentRecord sentimentRecord = gson.fromJson(parsedResponse, SentimentRecord.class);
-
             var user = userRepository.findByEmail(sentimentDomain.email()).get(0);
-
-            // Persist sentiment record
             sentimentAnalysisService.saveSentimentAnalysis(user, sentimentRecord);
 
             return sentimentRecord;

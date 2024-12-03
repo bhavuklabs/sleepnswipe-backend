@@ -27,7 +27,6 @@ public class SentimentAnalysisServiceImplementation extends SentimentAnalysisSer
                 .collect(Collectors.toMap(SentimentRecord.SentimentDomain::getSentiment, SentimentRecord.SentimentDomain::getValue));
 
         SentimentAnalysis sentimentAnalysis = new SentimentAnalysis();
-        sentimentAnalysis.setId(UUID.randomUUID());
         sentimentAnalysis.setUser(user);
         sentimentAnalysis.setScores(sentimentMap);
         sentimentAnalysis.setAnalysisTimestamp(LocalDateTime.now());
