@@ -66,7 +66,7 @@ public class QuestionServiceImplementation extends QuestionService {
 
             System.out.println(response.getBody());
             Gson gson = new Gson();
-            var parsedResponse = gson.fromJson(response.getBody().getCandidates().get(0).getCandidates().get(0).getParts().get(0).getText().replace("```json","").replace("```",""), ListQuestions.class);
+            var parsedResponse = gson.fromJson(response.getBody().getCandidates().get(0).getContent().getParts().get(0).getText().replace("```json","").replace("```",""), ListQuestions.class);
             System.out.println(parsedResponse);
             return null;
         } catch (ValidationException e) {
@@ -105,7 +105,7 @@ public class QuestionServiceImplementation extends QuestionService {
 
         try {
             ChatResponse response = chatModel.call(request);
-            var parsedResponse = response.getBody().getCandidates().get(0).getCandidates().get(0).getParts().get(0).getText()
+            var parsedResponse = response.getBody().getCandidates().getFirst().getContent().getParts().get(0).getText()
                     .replace("```json", "").replace("```", "");
             Gson gson = new Gson();
             SentimentRecord sentimentRecord = gson.fromJson(parsedResponse, SentimentRecord.class);
@@ -117,6 +117,4 @@ public class QuestionServiceImplementation extends QuestionService {
             throw new RuntimeException(e);
         }
     }
-
-
 }

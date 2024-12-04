@@ -18,6 +18,17 @@ public class SentimentProfile {
     @JoinColumn(name="user_id")
     private User user;
 
+    public SentimentProfile(UUID id, User user, double overallSentimentScore, String personalityType, double emotionalStabilityScore, double socialInteractionScore, SentimentAnalysis sentimentAnalysis, LocalDateTime lastAnalysisDate) {
+        this.id = id;
+        this.user = user;
+        this.overallSentimentScore = overallSentimentScore;
+        this.personalityType = personalityType;
+        this.emotionalStabilityScore = emotionalStabilityScore;
+        this.socialInteractionScore = socialInteractionScore;
+        this.sentimentAnalysis = sentimentAnalysis;
+        this.lastAnalysisDate = lastAnalysisDate;
+    }
+
     @Column(name="overall_sentiment_score", precision=5)
     private double overallSentimentScore;
 
@@ -38,6 +49,71 @@ public class SentimentProfile {
     @Column(name="last_analysis_date")
     private LocalDateTime lastAnalysisDate;
 
+    public SentimentProfile() {
 
+    }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public double getOverallSentimentScore() {
+        return overallSentimentScore;
+    }
+
+    public void setOverallSentimentScore(double overallSentimentScore) {
+        this.overallSentimentScore = overallSentimentScore;
+    }
+
+    public String getPersonalityType() {
+        return personalityType;
+    }
+
+    public void setPersonalityType(String personalityType) {
+        this.personalityType = personalityType;
+    }
+
+    public double getEmotionalStabilityScore() {
+        return emotionalStabilityScore;
+    }
+
+    public void setEmotionalStabilityScore(double emotionalStabilityScore) {
+        this.emotionalStabilityScore = emotionalStabilityScore;
+    }
+
+    public double getSocialInteractionScore() {
+        return socialInteractionScore;
+    }
+
+    public void setSocialInteractionScore(double socialInteractionScore) {
+        this.socialInteractionScore = socialInteractionScore;
+    }
+
+    public SentimentAnalysis getSentimentAnalysis() {
+        return sentimentAnalysis;
+    }
+
+    public void setSentimentAnalysis(SentimentAnalysis sentimentAnalysis) {
+        this.sentimentAnalysis = sentimentAnalysis;
+    }
+
+    public LocalDateTime getLastAnalysisDate() {
+        return lastAnalysisDate;
+    }
+
+    public void setLastAnalysisDate(LocalDateTime lastAnalysisDate) {
+        this.lastAnalysisDate = lastAnalysisDate;
+    }
 }
