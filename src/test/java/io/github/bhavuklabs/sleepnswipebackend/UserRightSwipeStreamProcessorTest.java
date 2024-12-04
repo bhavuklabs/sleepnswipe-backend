@@ -1,6 +1,6 @@
 package io.github.bhavuklabs.sleepnswipebackend;
 
-import io.github.bhavuklabs.sleepnswipebackend.matching.domain.UserRightSwipeStreamProcessor;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.services.implementation.UserRightSwipeStreamProcessor;
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.entities.SwipeRequestDomain;
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeHistory;
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.services.implementation.KafkaMatchProcessor;

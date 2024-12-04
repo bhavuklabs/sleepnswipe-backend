@@ -2,52 +2,65 @@ package io.github.bhavuklabs.sleepnswipebackend.security.config.validators;
 
 import io.github.bhavuklabs.sleepnswipebackend.security.config.JwtConstants;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.GrantedAuthoritiesContainer;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class JwtValidator extends OncePerRequestFilter {
 
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         try {
             String jwt = extractJwtFromRequest(request);
-            if(jwt != null) {
+            if (jwt != null) {
                 validateAndSetAuthentication(jwt);
             }
-
             filterChain.doFilter(request, response);
-        } catch(Exception e) {
-            handleJwtValidationError(response, e);
+        } catch (ExpiredJwtException e) {
+            sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Token has expired");
+        } catch (MalformedJwtException e) {
+            sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Invalid token format");
+        } catch (BadCredentialsException e) {
+            sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Invalid token credentials");
+        } catch (Exception e) {
+            sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred during authentication");
         }
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
+        response.setStatus(status);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+
+        // Use PrintWriter only once and write the full error response
+        response.getWriter().write(String.format("{\"error\": \"%s\"}", message));
+        response.getWriter().flush();
     }
 
     private String extractJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-
         return null;
     }
 
@@ -66,33 +79,26 @@ public class JwtValidator extends OncePerRequestFilter {
         String userId = claims.get("userId", String.class);
 
         Object authoritiesObject = claims.get("authorities");
-        List<GrantedAuthority> authorityList;
+        List<? extends org.springframework.security.core.GrantedAuthority> authorityList;
 
-        if(authoritiesObject == null) {
+        if (authoritiesObject == null) {
             authorityList = List.of();
-        } else if(authoritiesObject instanceof String) {
+        } else if (authoritiesObject instanceof String) {
             authorityList = AuthorityUtils.commaSeparatedStringToAuthorityList((String) authoritiesObject);
-        } else if(authoritiesObject instanceof List<?>) {
+        } else if (authoritiesObject instanceof List<?>) {
             authorityList = ((List<?>) authoritiesObject).stream()
                     .map(Object::toString)
                     .map(AuthorityUtils::createAuthorityList)
                     .flatMap(List::stream)
                     .collect(Collectors.toList());
-        } else if(authoritiesObject instanceof String[]) {
+        } else if (authoritiesObject instanceof String[]) {
             authorityList = AuthorityUtils.createAuthorityList((String[]) authoritiesObject);
         } else {
             throw new BadCredentialsException("Invalid Authorities Format");
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorityList);
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    private void handleJwtValidationError(HttpServletResponse response, Exception e) throws IOException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
-        response.getWriter().write(String.format("{error: %s }", e.getMessage()));
     }
 
     @Override
