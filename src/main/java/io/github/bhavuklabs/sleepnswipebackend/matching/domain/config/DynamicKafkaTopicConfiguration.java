@@ -12,9 +12,7 @@ import org.springframework.kafka.config.TopicBuilder;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @Configuration
 public class DynamicKafkaTopicConfiguration {
@@ -22,28 +20,40 @@ public class DynamicKafkaTopicConfiguration {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    private ConcurrentHashMap<String, Boolean> createdTopics = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Boolean> createdTopics = new ConcurrentHashMap<>();
     private final AdminClient adminClient;
 
+
+    // Add a constructor that Spring can use for dependency injection
     public DynamicKafkaTopicConfiguration(AdminClient adminClient) {
         this.adminClient = adminClient;
     }
 
-    public String createUserRightSwipesTopic(UUID uuid) throws Exception {
-        String topicName = "right-swipes-" + uuid.toString();
-        return createdTopics.computeIfAbsent(topicName, key -> {
-            NewTopic topic = TopicBuilder.name(topicName)
-                    .partitions(1)
-                    .replicas(1)
-                    .build();
+    // Ensure the method is public
+    public String createUserRightSwipesTopic(UUID uuid) {
+        if (uuid == null) {
+            return null;
+        }
 
-            try{
-                this.adminClient.createTopics(Collections.singleton(topic)).all().get();
+        String topicName = "right-swipes-" + uuid.toString();
+
+        return createdTopics.computeIfAbsent(topicName, key -> {
+            try {
+                NewTopic topic = TopicBuilder.name(topicName)
+                        .partitions(1)
+                        .replicas(1)
+                        .build();
+
+                adminClient.createTopics(Collections.singleton(topic))
+                        .all()
+                        .get(10, TimeUnit.SECONDS);
+
+                return true;
+            } catch (TopicExistsException e) {
                 return true;
             } catch (Exception e) {
                 return false;
             }
         }) ? topicName : null;
     }
-
 }

@@ -1,5 +1,7 @@
 package io.github.bhavuklabs.sleepnswipebackend.security.domain.services.implementation;
 
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeQuota;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.repositories.SwipeQuotaRepository;
 import io.github.bhavuklabs.sleepnswipebackend.security.config.providers.JwtProvider;
 import io.github.bhavuklabs.sleepnswipebackend.security.domain.entities.AuthRequestDomain;
 import io.github.bhavuklabs.sleepnswipebackend.security.domain.entities.AuthResponseDomain;
@@ -19,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +35,10 @@ public class UserServiceImplementation extends UserService {
     private final UserMapper userMapper;
     private final JwtProvider jwtProvider;
     private final UserProfileRepository userProfileRepository;
+    private final SwipeQuotaRepository swipeQuotaRepository;
 
     private final PasswordEncoder passwordEncoder;
-    public UserServiceImplementation(UserRepository repository, UserMapper mapper, PasswordEncoder passwordEncoder, JwtProvider jwtProvider, UserProfileRepository userProfileRepository) {
+    public UserServiceImplementation(UserRepository repository, UserMapper mapper, PasswordEncoder passwordEncoder, JwtProvider jwtProvider, UserProfileRepository userProfileRepository, SwipeQuotaRepository swipeQuotaRepository) {
         super(repository, mapper);
 
         this.userRepository = repository;
@@ -42,6 +46,7 @@ public class UserServiceImplementation extends UserService {
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
         this.userProfileRepository = userProfileRepository;
+        this.swipeQuotaRepository = swipeQuotaRepository;
     }
 
     @Override
@@ -70,6 +75,16 @@ public class UserServiceImplementation extends UserService {
             savedUser.setFirstName(userDomain.firstName());
             savedUser.setLastName(userDomain.lastName());
             savedUser.setEmail(userDomain.email());
+
+            SwipeQuota swipeQuota = new SwipeQuota();
+            swipeQuota.setUser(savedUser);
+            swipeQuota.setDailySwipesTotal(100);
+            swipeQuota.setDailySwipesUsed(0);
+            swipeQuota.setBonusSwipes(0);
+            swipeQuota.setLastResetDate(LocalDate.now());
+            swipeQuota.setUpdatedAt(LocalDateTime.now());
+
+            this.swipeQuotaRepository.save(swipeQuota);
             savedUser.setDateOfBirth(userDomain.dateOfBirth());
             if (hasHealthInformation(userDomain)) {
                 UserProfile userProfile = new UserProfile();

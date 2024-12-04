@@ -21,4 +21,6 @@ public interface SwipeQuotaRepository extends JpaRepository<SwipeQuota, UUID> {
     void resetDailySwipes(@Param("currentDate")LocalDate currentDate,
         @Param("currentTimestamp") LocalDateTime currentTimestamp
         );
+
+    Optional<SwipeQuota> findByUserId(UUID userId);
 }

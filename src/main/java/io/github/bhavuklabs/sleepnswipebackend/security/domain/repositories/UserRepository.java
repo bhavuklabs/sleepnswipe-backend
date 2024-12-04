@@ -19,8 +19,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findByEmailAndPassword(String email, String password);
 
     @Query("SELECT u FROM User u WHERE u.id NOT IN " +
-            "(SELECT sh.targetProfile.id FROM SwipeHistory sh WHERE sh.user.id = :userId)")
-    List<User> findUsersNotSwipedByUser(@Param("userId") UUID userId);
+            "(SELECT sh.targetProfile.id FROM SwipeHistory sh WHERE sh.user.id = :targetUserId)")
+    List<User> findUsersNotSwipedByUser(@Param("targetUserId") UUID targetUserId);
 
     @Query("SELECT u FROM User u WHERE " +
             "YEAR(CURRENT_DATE) - YEAR(u.dateOfBirth) BETWEEN :minAge AND :maxAge")

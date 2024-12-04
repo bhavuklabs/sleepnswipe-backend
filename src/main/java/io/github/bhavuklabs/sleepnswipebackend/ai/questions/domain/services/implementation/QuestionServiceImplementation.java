@@ -10,6 +10,7 @@ import io.github.bhavuklabs.javageminiclient.commons.utilities.request.RequestBo
 import io.github.bhavuklabs.javageminiclient.models.ChatModel;
 import io.github.bhavuklabs.javageminiclient.request.ChatRequest;
 import io.github.bhavuklabs.javageminiclient.response.ChatResponse;
+import io.github.bhavuklabs.sleepnswipebackend.ai.commons.GenerateRequestBody;
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.entities.QuestionDomain;
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.entities.request.QuestionSentimentDomain;
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.entities.response.ListQuestions;
@@ -19,6 +20,8 @@ import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.repositories.
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.services.core.QuestionService;
 import io.github.bhavuklabs.sleepnswipebackend.health.domain.services.core.SentimentAnalysisService;
 import io.github.bhavuklabs.sleepnswipebackend.health.domain.utilities.SentimentLoader;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeQuota;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.repositories.SwipeQuotaRepository;
 import io.github.bhavuklabs.sleepnswipebackend.security.domain.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -31,14 +34,15 @@ public class QuestionServiceImplementation extends QuestionService {
     private final QuestionMapper questionMapper;
     private final UserRepository userRepository;
     private final SentimentAnalysisService sentimentAnalysisService;
+    private final SwipeQuotaRepository swipeQuotaRepository;
 
-
-    public QuestionServiceImplementation(QuestionsRepository repository, QuestionMapper mapper, UserRepository userRepository, SentimentAnalysisService sentimentAnalysisService) {
+    public QuestionServiceImplementation(QuestionsRepository repository, QuestionMapper mapper, UserRepository userRepository, SentimentAnalysisService sentimentAnalysisService, SwipeQuotaRepository swipeQuotaRepository) {
         super(repository, mapper);
         this.questionsRepository = repository;
         this.questionMapper = mapper;
         this.userRepository = userRepository;
         this.sentimentAnalysisService = sentimentAnalysisService;
+        this.swipeQuotaRepository = swipeQuotaRepository;
     }
 
 
@@ -75,10 +79,7 @@ public class QuestionServiceImplementation extends QuestionService {
     }
 
     private RequestBody getRequestBody(String prompt) {
-        Part<String> part = new Part<>(new RequestPrompt<>(prompt));
-        Content content = new Content(List.of(part));
-        RequestBody requestBody = new RequestBody(List.of(content));
-        return requestBody;
+        return GenerateRequestBody.getRequestBody(prompt);
     }
 
     @Override
@@ -111,7 +112,9 @@ public class QuestionServiceImplementation extends QuestionService {
             SentimentRecord sentimentRecord = gson.fromJson(parsedResponse, SentimentRecord.class);
             var user = userRepository.findByEmail(sentimentDomain.email()).get(0);
             sentimentAnalysisService.saveSentimentAnalysis(user, sentimentRecord);
-
+            var quota = this.swipeQuotaRepository.findByUserId(user.getId()).get();
+            quota.setBonusSwipes(quota.getBonusSwipes() + 20);
+            this.swipeQuotaRepository.save(quota);
             return sentimentRecord;
         } catch (ValidationException e) {
             throw new RuntimeException(e);
