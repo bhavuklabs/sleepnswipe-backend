@@ -1,4 +1,8 @@
 package io.github.bhavuklabs.sleepnswipebackend.matching.domain.services.core;
 
-public class KafkaMatchProcessor {
+import java.util.UUID;
+
+public abstract class KafkaMatchProcessor {
+
+    public abstract void processMatchCandidates(UUID uuid);
 }

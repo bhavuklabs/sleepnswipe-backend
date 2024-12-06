@@ -4,6 +4,7 @@ import io.github.bhavuklabs.sleepnswipebackend.matching.domain.entities.MatchRes
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeHistory;
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.UserMatch;
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.repositories.SwipeHistoryRepository;
+import io.github.bhavuklabs.sleepnswipebackend.matching.domain.repositories.UserMatchRepository;
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.services.core.MatchService;
 import io.github.bhavuklabs.sleepnswipebackend.security.domain.models.User;
 import io.github.bhavuklabs.sleepnswipebackend.security.domain.repositories.UserRepository;
@@ -22,10 +23,12 @@ public class MatchServiceImplementation implements MatchService {
 
     private final UserRepository userRepository;
     private final SwipeHistoryRepository swipeHistoryRepository;
+    private final UserMatchRepository userMatchRepository;
 
-    public MatchServiceImplementation(UserRepository userRepository, SwipeHistoryRepository swipeHistoryRepository) {
+    public MatchServiceImplementation(UserRepository userRepository, SwipeHistoryRepository swipeHistoryRepository, UserMatchRepository userMatchRepository) {
         this.userRepository = userRepository;
         this.swipeHistoryRepository = swipeHistoryRepository;
+        this.userMatchRepository = userMatchRepository;
     }
 
     @Override
@@ -46,12 +49,24 @@ public class MatchServiceImplementation implements MatchService {
         User candidate = userRepository.findById(candidateId)
                 .orElseThrow(() -> new NoSuchElementException("Candidate not found"));
 
-        double baseCompatibility = calculateBaseCompatibility(user, candidate);
-        double sentimentScore = calculateSentimentMatchScore(userId, candidateId);
-        double healthScore = calculateHealthMatchScore(userId, candidateId);
-
-        return (baseCompatibility * 0.5) + (sentimentScore * 0.3) + (healthScore * 0.2);
+        return calculateBaseCompatibility(user, candidate) * 0.5 +
+                calculateSentimentMatchScore(user.getId(), candidate.getId()) * 0.3 +
+                calculateHealthMatchScore(user.getId(), candidate.getId()) * 0.2;
     }
+
+    private double calculateBaseCompatibility(User user, User candidate) {
+        // Age proximity calculation
+        int ageDifference = Math.abs(calculateAge(user.getDateOfBirth().toLocalDate()) -
+                calculateAge(candidate.getDateOfBirth().toLocalDate()));
+        double ageCompatibility = Math.max(0, 1.0 - (ageDifference / 10.0));
+
+        // Gender compatibility
+        double genderCompatibility = user.getGender() == candidate.getGender() ? 1.0 : 0.5;
+
+        return (ageCompatibility + genderCompatibility) / 2.0;
+    }
+
+// Implement or reference existing methods for sentiment and health scores
 
     @Override
     public List<MatchResponseDomain> rankMatchCandidates(UUID userId, List<User> candidates) {
@@ -64,11 +79,11 @@ public class MatchServiceImplementation implements MatchService {
 
     private MatchResponseDomain generateMatchResponse(UUID userId, User candidate) {
         double compatibilityScore = calculateCompatibility(userId, candidate.getId());
-
+        var match = this.userMatchRepository.findByUser2(candidate).get();
         return new MatchResponseDomain(
                 UUID.randomUUID(),
-                userId,
-                candidate.getId(),
+                match.getUser1().getId(),
+                match.getUser2().getId(),
                 compatibilityScore,
                 calculateSentimentMatchScore(userId, candidate.getId()),
                 calculateHealthMatchScore(userId, candidate.getId()),
@@ -105,13 +120,6 @@ public class MatchServiceImplementation implements MatchService {
         return user.getGender() == candidate.getGender();
     }
 
-    private double calculateBaseCompatibility(User user, User candidate) {
-        double ageCompatibility = calculateAgeProximityScore(user, candidate);
-        double genderCompatibility = calculateGenderCompatibility(user, candidate);
-
-        return (ageCompatibility + genderCompatibility) / 2.0;
-    }
-
     private int calculateAge(LocalDate birthDate) {
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
@@ -127,17 +135,15 @@ public class MatchServiceImplementation implements MatchService {
     }
 
     private double calculateSentimentMatchScore(UUID userId, UUID candidateId) {
-        // Placeholder for more complex sentiment matching logic
         return 0.75;
     }
 
     private double calculateHealthMatchScore(UUID userId, UUID candidateId) {
-        // Placeholder for more complex health compatibility logic
         return 0.85;
     }
 
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        final int R = 6371; // Radius of the earth
+        final int R = 6371;
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)

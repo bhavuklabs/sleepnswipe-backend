@@ -21,4 +21,6 @@ public abstract class UserService extends GenericPersistenceService<User, UserDo
     public abstract AuthResponseDomain login(AuthRequestDomain userDomain);
     public abstract AuthResponseDomain authenticationSignup(AuthRequestDomain userDomain);
     public abstract Optional<UserDomain> update(UserDomain userDomain);
+
+    public abstract Optional<User> findUserByEmail(String email);
 }
