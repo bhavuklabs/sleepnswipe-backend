@@ -15,14 +15,14 @@ import io.github.bhavuklabs.sleepnswipebackend.security.domain.models.User;
 import io.github.bhavuklabs.sleepnswipebackend.security.domain.services.core.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/dashboard")
+@CrossOrigin("http://localhost:5173")
 public class DashboardController {
 
     private final UserService userService;
@@ -39,7 +39,7 @@ public class DashboardController {
         this.sentimentAnalysisRepository = sentimentAnalysisRepository;
     }
 
-    @GetMapping("/user/data")
+    @PostMapping("/user/data")
     public ResponseEntity<DashboardDetails> dashboardDetails(@RequestBody DashboardRequestDomain email) {
         var user = this.userService.findUserByEmail(email.email()).get();
         System.out.println(user);
@@ -71,12 +71,10 @@ public class DashboardController {
         for (UserMatch match : userMatches) {
             User user1 = match.getUser1();
             User user2 = match.getUser2();
-
             SentimentProfile sentimentProfile1 = sentimentProfileRepository.findSentimentProfileByUser(user1)
                     .orElse(null);
             SentimentProfile sentimentProfile2 = sentimentProfileRepository.findSentimentProfileByUser(user2)
                     .orElse(null);
-
             MatchDomain matchDomain = new MatchDomain(
                     match.getId(),
                     user1.getId(),
@@ -89,10 +87,8 @@ public class DashboardController {
                     sentimentProfile1 != null ? sentimentProfile1.getPersonalityType() : null,
                     sentimentProfile2 != null ? sentimentProfile2.getPersonalityType() : null
             );
-
             matchProfiles.add(matchDomain);
         }
-
         return ResponseEntity.ok(matchProfiles);
     }
 
