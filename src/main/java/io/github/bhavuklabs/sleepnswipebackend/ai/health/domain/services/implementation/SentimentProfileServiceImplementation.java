@@ -1,11 +1,11 @@
 package io.github.bhavuklabs.sleepnswipebackend.ai.health.domain.services.implementation;
 
 import com.google.gson.Gson;
-import io.github.bhavuklabs.javageminiclient.basic.BasicRequestValidator;
-import io.github.bhavuklabs.javageminiclient.commons.exceptions.ValidationException;
-import io.github.bhavuklabs.javageminiclient.models.ChatModel;
-import io.github.bhavuklabs.javageminiclient.request.ChatRequest;
-import io.github.bhavuklabs.javageminiclient.response.ChatResponse;
+import io.github.venkat1701.javageminiclient.basic.BasicRequestValidator;
+import io.github.venkat1701.javageminiclient.commons.exceptions.ValidationException;
+import io.github.venkat1701.javageminiclient.models.ChatModel;
+import io.github.venkat1701.javageminiclient.request.ChatRequest;
+import io.github.venkat1701.javageminiclient.response.ChatResponse;
 import io.github.bhavuklabs.sleepnswipebackend.ai.commons.GenerateRequestBody;
 import io.github.bhavuklabs.sleepnswipebackend.ai.health.domain.entities.SentimentProfileDomain;
 import io.github.bhavuklabs.sleepnswipebackend.ai.health.domain.services.core.SentimentProfileService;
