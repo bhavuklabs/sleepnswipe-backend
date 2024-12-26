@@ -1,9 +1,9 @@
 package io.github.bhavuklabs.sleepnswipebackend.ai.commons;
 
-import io.github.bhavuklabs.javageminiclient.commons.prompt.RequestPrompt;
-import io.github.bhavuklabs.javageminiclient.commons.utilities.commons.Content;
-import io.github.bhavuklabs.javageminiclient.commons.utilities.commons.Part;
-import io.github.bhavuklabs.javageminiclient.commons.utilities.request.RequestBody;
+import io.github.venkat1701.javageminiclient.commons.prompt.RequestPrompt;
+import io.github.venkat1701.javageminiclient.commons.utilities.commons.Content;
+import io.github.venkat1701.javageminiclient.commons.utilities.commons.Part;
+import io.github.venkat1701.javageminiclient.commons.utilities.request.RequestBody;
 
 import java.util.List;
 

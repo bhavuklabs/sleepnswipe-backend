@@ -1,15 +1,15 @@
 package io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.services.implementation;
 
 import com.google.gson.Gson;
-import io.github.bhavuklabs.javageminiclient.basic.BasicRequestValidator;
-import io.github.bhavuklabs.javageminiclient.commons.exceptions.ValidationException;
-import io.github.bhavuklabs.javageminiclient.commons.prompt.RequestPrompt;
-import io.github.bhavuklabs.javageminiclient.commons.utilities.commons.Content;
-import io.github.bhavuklabs.javageminiclient.commons.utilities.commons.Part;
-import io.github.bhavuklabs.javageminiclient.commons.utilities.request.RequestBody;
-import io.github.bhavuklabs.javageminiclient.models.ChatModel;
-import io.github.bhavuklabs.javageminiclient.request.ChatRequest;
-import io.github.bhavuklabs.javageminiclient.response.ChatResponse;
+import io.github.venkat1701.javageminiclient.basic.BasicRequestValidator;
+import io.github.venkat1701.javageminiclient.commons.exceptions.ValidationException;
+import io.github.venkat1701.javageminiclient.commons.prompt.RequestPrompt;
+import io.github.venkat1701.javageminiclient.commons.utilities.commons.Content;
+import io.github.venkat1701.javageminiclient.commons.utilities.commons.Part;
+import io.github.venkat1701.javageminiclient.commons.utilities.request.RequestBody;
+import io.github.venkat1701.javageminiclient.models.ChatModel;
+import io.github.venkat1701.javageminiclient.request.ChatRequest;
+import io.github.venkat1701.javageminiclient.response.ChatResponse;
 import io.github.bhavuklabs.sleepnswipebackend.ai.commons.GenerateRequestBody;
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.entities.QuestionDomain;
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.entities.request.QuestionSentimentDomain;
