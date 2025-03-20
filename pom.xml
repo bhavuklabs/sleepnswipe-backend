@@ -148,6 +148,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>io.github.venkat1701</groupId>
+            <artifactId>gemini_client_for_java</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -167,7 +172,6 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-
         <repository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>

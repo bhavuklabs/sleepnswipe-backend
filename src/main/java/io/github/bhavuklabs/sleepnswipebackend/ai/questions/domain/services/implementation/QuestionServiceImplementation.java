@@ -3,6 +3,10 @@ package io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.services.imp
 import com.google.gson.Gson;
 import io.github.venkat1701.javageminiclient.basic.BasicRequestValidator;
 import io.github.venkat1701.javageminiclient.commons.exceptions.ValidationException;
+
+import io.github.venkat1701.javageminiclient.commons.prompt.RequestPrompt;
+import io.github.venkat1701.javageminiclient.commons.utilities.commons.Content;
+import io.github.venkat1701.javageminiclient.commons.utilities.commons.Part;
 import io.github.venkat1701.javageminiclient.commons.utilities.request.RequestBody;
 import io.github.venkat1701.javageminiclient.models.ChatModel;
 import io.github.venkat1701.javageminiclient.request.ChatRequest;
