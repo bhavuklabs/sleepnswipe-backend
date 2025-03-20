@@ -2,6 +2,7 @@ package io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.services.cor
 
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.entities.QuestionDomain;
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.entities.request.QuestionSentimentDomain;
+import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.entities.response.ListQuestions;
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.entities.response.SentimentRecord;
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.mappers.QuestionMapper;
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.models.Questions;
@@ -23,7 +24,7 @@ public abstract class QuestionService extends GenericPersistenceService<Question
     }
 
 
-    public abstract List<QuestionDomain> createQuestions();
+    public abstract ListQuestions createQuestions();
 
     public abstract SentimentRecord generateSentimentScore(QuestionSentimentDomain questionSentimentDomain);
 }

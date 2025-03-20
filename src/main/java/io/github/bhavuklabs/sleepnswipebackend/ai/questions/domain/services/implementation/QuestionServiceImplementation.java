@@ -3,6 +3,7 @@ package io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.services.imp
 import com.google.gson.Gson;
 import io.github.venkat1701.javageminiclient.basic.BasicRequestValidator;
 import io.github.venkat1701.javageminiclient.commons.exceptions.ValidationException;
+
 import io.github.venkat1701.javageminiclient.commons.prompt.RequestPrompt;
 import io.github.venkat1701.javageminiclient.commons.utilities.commons.Content;
 import io.github.venkat1701.javageminiclient.commons.utilities.commons.Part;
@@ -20,7 +21,6 @@ import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.repositories.
 import io.github.bhavuklabs.sleepnswipebackend.ai.questions.domain.services.core.QuestionService;
 import io.github.bhavuklabs.sleepnswipebackend.health.domain.services.core.SentimentAnalysisService;
 import io.github.bhavuklabs.sleepnswipebackend.health.domain.utilities.SentimentLoader;
-import io.github.bhavuklabs.sleepnswipebackend.matching.domain.models.SwipeQuota;
 import io.github.bhavuklabs.sleepnswipebackend.matching.domain.repositories.SwipeQuotaRepository;
 import io.github.bhavuklabs.sleepnswipebackend.security.domain.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class QuestionServiceImplementation extends QuestionService {
 
 
     @Override
-    public List<QuestionDomain> createQuestions() {
+    public ListQuestions createQuestions() {
         var restTemplate = new RestTemplate();
         var chatModel = new ChatModel(restTemplate, new BasicRequestValidator());
         RequestBody requestBody = getRequestBody("""
@@ -72,7 +72,7 @@ public class QuestionServiceImplementation extends QuestionService {
             Gson gson = new Gson();
             var parsedResponse = gson.fromJson(response.getBody().getCandidates().get(0).getContent().getParts().get(0).getText().replace("```json","").replace("```",""), ListQuestions.class);
             System.out.println(parsedResponse);
-            return null;
+            return parsedResponse;
         } catch (ValidationException e) {
             throw new RuntimeException(e);
         }

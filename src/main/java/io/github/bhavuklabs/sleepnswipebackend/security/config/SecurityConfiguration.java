@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SecurityConfiguration {
@@ -34,6 +35,7 @@ public class SecurityConfiguration {
                     requests.requestMatchers("/sentiment/**").permitAll();
                     requests.requestMatchers("/api/v1/**").permitAll();
                     requests.requestMatchers("/onboarding/**").permitAll();
+                    requests.requestMatchers("/dashboard/**").permitAll();
                     requests.anyRequest().permitAll();
                 })
                 .addFilterBefore(new JwtValidator(), UsernamePasswordAuthenticationFilter.class)
@@ -50,10 +52,11 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsFilter() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));  // added this line
         configuration.setAllowCredentials(true);
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Cache-Control"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Cache-Control", "Access-Control-Allow-Origin"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

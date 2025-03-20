@@ -7,7 +7,9 @@ import io.github.venkat1701.javageminiclient.models.ChatModel;
 import io.github.venkat1701.javageminiclient.request.ChatRequest;
 import io.github.venkat1701.javageminiclient.response.ChatResponse;
 import io.github.bhavuklabs.sleepnswipebackend.ai.commons.GenerateRequestBody;
+import io.github.bhavuklabs.sleepnswipebackend.ai.health.domain.entities.SentimentProfileDomain;
 import io.github.bhavuklabs.sleepnswipebackend.ai.health.domain.services.core.SentimentProfileService;
+import io.github.bhavuklabs.sleepnswipebackend.exquisite.utilities.DashboardDetails;
 import io.github.bhavuklabs.sleepnswipebackend.health.domain.entities.SentimentProfileRequestDomain;
 import io.github.bhavuklabs.sleepnswipebackend.health.domain.models.SentimentAnalysis;
 import io.github.bhavuklabs.sleepnswipebackend.health.domain.models.SentimentProfile;
@@ -18,6 +20,9 @@ import io.github.bhavuklabs.sleepnswipebackend.security.domain.services.core.Use
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SentimentProfileServiceImplementation implements SentimentProfileService {
@@ -32,7 +37,7 @@ public class SentimentProfileServiceImplementation implements SentimentProfileSe
         this.sentimentAnalysisRepository = sentimentAnalysisRepository;
     }
 
-    public void generateAndReturnSentimentProfile(SentimentProfileRequestDomain sentimentProfileDomain) {
+    public DashboardDetails generateAndReturnSentimentProfile(SentimentProfileRequestDomain sentimentProfileDomain) {
         User user = this.userService.findUserByEmail(sentimentProfileDomain.email()).stream().findFirst().orElse(null);
         if(user == null) {
             throw new UsernameNotFoundException("User with corresponding mail Not Found");
@@ -67,6 +72,17 @@ public class SentimentProfileServiceImplementation implements SentimentProfileSe
             sentimentProfile.setSocialInteractionScore(parsedResponse.socialInteractionScore());
             sentimentProfile.setSentimentAnalysis(analysis);
             sentimentProfileRepository.save(sentimentProfile);
+            List<List<Integer>> sleepRecord = new ArrayList<>();
+            for(int i=0;i<=5;i++) {
+                var list = new ArrayList<Integer>();
+                for(int j=0;j<=5;j++) {
+                    int val = (int)(Math.random()*(9-1)+1);
+                    list.add(val);
+                }
+                sleepRecord.add(list);
+            }
+            DashboardDetails details = new DashboardDetails(sentimentProfile.getOverallSentimentScore(),sentimentProfile.getPersonalityType(), sentimentProfile.getEmotionalStabilityScore(), sentimentProfile.getSocialInteractionScore(), 2, sleepRecord);
+            return details;
         } catch(ValidationException e) {
             throw new RuntimeException(e);
         }

@@ -13,6 +13,7 @@ import java.util.UUID;
 
 @Table(name="users")
 @Entity
+@ToString
 public class User {
     public User(UUID id, String email, String password, String username, String firstName, String lastName, LocalDateTime dateOfBirth, GenderEnum gender, LocalDateTime createdAt, LocalDateTime lastLogin) {
         this.id = id;
